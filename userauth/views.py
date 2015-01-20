@@ -1,4 +1,4 @@
-from django.shortcuts import *
+from django.shortcuts import redirect, render
 from forms import UserProfileForm, UserForm
 from django.http import HttpResponse
 from userauth.models import UserProfile
