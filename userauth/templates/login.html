@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 
 {%block content%}
-
-<form action="/login/" method = "POST">
+{% if next %}
+<form action="/accounts/login/?next={{next}}" method="post" >
+{%else%}
+<form action="/accounts/login/" method="post" >
+{% endif %}
 {%csrf_token%}
 <table class="table">
 Username: <input type="text" name="username" value="" size="50" />

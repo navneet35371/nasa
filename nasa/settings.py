@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'nasarover',
-    'userauth'
+    'userauth',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -3,12 +3,24 @@ from django.shortcuts import redirect, render
 from nasarover.forms import GridForm, RoverForm, RoverSenForm
 from django.http import HttpResponse
 from nasarover.models import Rover, RoverPos
+from rest_framework import generics
+from nasarover.serializers import RoverSerializer
 
+class RoverList(generics.ListCreateAPIView):
+    queryset = Rover.objects.all()
+    serializer_class = RoverSerializer
+    def get_queryset(self):
+        return Rover.objects.filter(user_id = self.request.user)
+
+
+class RoverDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Rover.objects.all()
+    serializer_class = RoverSerializer
 
 def index(request):
     """Docstring"""
     if not request.user.is_authenticated():
-        return redirect('/login/')
+        return redirect('accounts/login/')
     sform = RoverSenForm()
     if request.method == 'POST':
         form = RoverForm(request.POST)
@@ -23,7 +35,7 @@ def index(request):
 def newgrid(request):
     """Docstring"""
     if not request.user.is_authenticated():
-        return redirect('/login/')
+        return redirect('accounts/login/')
     if request.method == 'POST':
         form = GridForm(request.POST)
         if True:
@@ -77,3 +89,4 @@ def process(request):
         return HttpResponse(s)
     else:
         return HttpResponseNotFound('<h1>Page not found</h1>')
+
