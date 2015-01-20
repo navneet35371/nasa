@@ -31,11 +31,18 @@ class MineralDis(models.Model):
     mi_id = models.ForeignKey('Mineral')
     quantity = models.IntegerField()
 
+class RoverPos(models.Model):
+    g_id = models.IntegerField()
+    pos_x = models.IntegerField()
+    pos_y = models.IntegerField()
+    r_id = models.ForeignKey('Rover')
+    dirn = models.CharField(max_length = 1)
+    def __unicode__(self):
+        return self.r_id.name
 
 class Rover(models.Model):
     user_id = models.ForeignKey(User)
-    sg_id = models.ForeignKey('SubGrid')
-    dirn = models.CharField(max_length=1)
+    rover_name = models.CharField(max_length = 20)
 
     def __unicode__(self):
         return str(self.id)
@@ -53,51 +60,48 @@ class Rover(models.Model):
     def change_dirn(self, dirn):
         direction = "NESW"
         if dirn == 'R':
-            self.dirn = direction[(direction.find(self.dirn) + 1) % 4]
-            self.save()
+            temp = direction[(direction.find(self.dirn) + 1) % 4]
+            temp_r = RoverPos.objects.get(r_id = self.id)
+            temp_r.dirn = temp
+            temp_r.save()
         else:
-            self.dirn = direction[(direction.find(self.dirn) - 1)]
-            self.save()
+            temp = direction[(direction.find(self.dirn) - 1)]
+            temp_r = RoverPos.objects.get(r_id = self.id)
+            temp_r.dirn = temp
+            temp_r.save()
 
     def increment_y(self):
         """docstring for increment_y"""
-        sg = self.sg_id
-        temp = sg.pos_y + 1
-        sg = SubGrid.objects.filter(g_id=sg.g_id, pos_x=sg.pos_x, pos_y=temp)
-        self.sg_id = sg[0]
-        self.save()
+        temp = RoverPos.objects.get(r_id = self.id)
+        temp.pos_y += 1
+        temp.save()
 
     def decrement_y(self):
         """docstring for decrement_y"""
-        sg = self.sg_id
-        temp = sg.pos_y - 1
-        sg = SubGrid.objects.filter(g_id=sg.g_id, pos_x=sg.pos_x, pos_y=temp)
-        self.sg_id = sg[0]
-        self.save()
+        temp = RoverPos.objects.get(r_id = self.id)
+        temp.pos_y -= 1
+        temp.save()
 
     def increment_x(self):
         """docstring for increment_x"""
-        sg = self.sg_id
-        temp = sg.pos_x + 1
-        sg = SubGrid.objects.filter(g_id=sg.g_id, pos_x=temp, pos_y=sg.pos_y)
-        self.sg_id = sg[0]
-        self.save()
+        temp = RoverPos.objects.get(r_id = self.id)
+        temp.pos_x += 1
+        temp.save()
 
     def decrement_x(self):
         """docstring for decrement_x"""
-        sg = self.sg_id
-        temp = sg.pos_x - 1
-        sg = SubGrid.objects.filter(g_id=sg.g_id, pos_x=temp, pos_y=sg.pos_y)
-        self.sg_id = sg[0]
-        self.save()
+        temp = RoverPos.objects.get(r_id = self.id)
+        temp.pos_x -= 1
+        temp.save()
 
     def move_a_step(self):
         """docstring for move_a_step"""
-        if self.dirn == 'N':
+        temp = RoverPos.objects.get(r_id = self.id)
+        if temp.dirn == 'N':
             self.increment_y()
-        elif self.dirn == 'E':
+        elif temp.dirn == 'E':
             self.increment_x()
-        elif self.dirn == 'S':
+        elif temp.dirn == 'S':
             self.decrement_y()
         else:
             self.decrement_x()
@@ -109,8 +113,10 @@ class Rover(models.Model):
             temp_r = i.r_id.id
             temp_m = i.m_id.id
             rovr = Rover.objects.get(id=temp_r)
+            rover_pos = RoverPos.objects.get(id = temp_r)
+            sg = SubGrid.objects.get(g_id = rover_pos.g_id, pos_x = rover_pos.pos_x,  pos_y = rover_pos.pos_y)
             mnrl = Mineral.objects.get(id=temp_m)
-            mn_dis = MineralDis.objects.filter(sg_id=rovr.sg_id, mi_id=mnrl)[0]
+            mn_dis = MineralDis.objects.filter(sg_id=sg, mi_id=mnrl)[0]
             if mn_dis.quantity > 0:
                 mn_dis.quantity -= 1
                 mn_dis.save()

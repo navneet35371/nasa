@@ -41,12 +41,22 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'nasarover', ['MineralDis'])
 
+        # Adding model 'RoverPos'
+        db.create_table(u'nasarover_roverpos', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('g_id', self.gf('django.db.models.fields.IntegerField')()),
+            ('pos_x', self.gf('django.db.models.fields.IntegerField')()),
+            ('pos_y', self.gf('django.db.models.fields.IntegerField')()),
+            ('r_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['nasarover.Rover'])),
+            ('dirn', self.gf('django.db.models.fields.CharField')(max_length=1)),
+        ))
+        db.send_create_signal(u'nasarover', ['RoverPos'])
+
         # Adding model 'Rover'
         db.create_table(u'nasarover_rover', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('sg_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['nasarover.SubGrid'])),
-            ('dirn', self.gf('django.db.models.fields.CharField')(max_length=1)),
+            ('rover_name', self.gf('django.db.models.fields.CharField')(max_length=20)),
         ))
         db.send_create_signal(u'nasarover', ['Rover'])
 
@@ -77,6 +87,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'MineralDis'
         db.delete_table(u'nasarover_mineraldis')
+
+        # Deleting model 'RoverPos'
+        db.delete_table(u'nasarover_roverpos')
 
         # Deleting model 'Rover'
         db.delete_table(u'nasarover_rover')
@@ -142,10 +155,18 @@ class Migration(SchemaMigration):
         },
         u'nasarover.rover': {
             'Meta': {'object_name': 'Rover'},
-            'dirn': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'sg_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['nasarover.SubGrid']"}),
+            'rover_name': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'user_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'nasarover.roverpos': {
+            'Meta': {'object_name': 'RoverPos'},
+            'dirn': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
+            'g_id': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'pos_x': ('django.db.models.fields.IntegerField', [], {}),
+            'pos_y': ('django.db.models.fields.IntegerField', [], {}),
+            'r_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['nasarover.Rover']"})
         },
         u'nasarover.roversen': {
             'Meta': {'unique_together': "(('r_id', 'm_id'),)", 'object_name': 'RoverSen'},

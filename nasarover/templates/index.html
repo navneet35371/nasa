@@ -15,6 +15,7 @@
     <button type="submit" class="btn btn-default">Submit</button>
 </form>
 
+<h3> Add some mineral </h3>
 <form action="/senform/" method="POST">
     {%csrf_token%}
     <table class="table">
@@ -23,15 +24,44 @@
     <button type="submit" class="btn btn-default">Submit</button>
 </form>
 
+
+<h3> Give instructions to process </h3>
 <form action="process/" method = "POST">
     {%csrf_token%}
-    <table class="table">
     <tr>
         <th>
             <label for="id_rovr">Rover id:</label>
         </th>
         <td>
             <input id="id_rovr" maxlength="100" name="rovr" type="text" />
+        </td>
+        </br>
+        <input type="checkbox" name="upd" value="Update" default=on> Update pos?<br>
+        <th>
+            <label for="id_rovr">Grid id:</label>
+        </th>
+        <td>
+            <input id="id_rovr" maxlength="100" name="grid" type="text" />
+        </td>
+        <th>
+            <label for="id_rovr">Grid Pos x:</label>
+        </th>
+        <td>
+            <input id="id_rovr" maxlength="100" name="grid_x" type="text" />
+        </td>
+        <th>
+            <label for="id_rovr">Grid pos Y:</label>
+        </th>
+        <td>
+            <input id="id_rovr" maxlength="100" name="grid_y" type="text" />
+        </td>
+        </br>
+        </br>
+        <th>
+            <label for="id_rovr">Rover dirn:</label>
+        </th>
+        <td>
+            <input id="id_rovr" maxlength="1" name="dirn" type="text" />
         </td>
         <th>
             <label for="id_inst">Instructions :</label>
@@ -40,11 +70,7 @@
             <input id="id_inst" maxlength="100" name="inst" type="text" />
         </td>
     </tr>
-    </table>
     <button type="submit" class="btn btn-default">Process</button>
 </form>
-
-
-
 
 {% endblock %}
