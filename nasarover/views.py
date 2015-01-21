@@ -10,7 +10,10 @@ class RoverList(generics.ListCreateAPIView):
     queryset = Rover.objects.all()
     serializer_class = RoverSerializer
     def get_queryset(self):
-        return Rover.objects.filter(user_id = self.request.user)
+        if self.request.user.is_anonymous():
+            return Rover.objects.all()
+        else:
+            return Rover.objects.filter(user_id = self.request.user)
 
 
 class RoverDetail(generics.RetrieveUpdateDestroyAPIView):

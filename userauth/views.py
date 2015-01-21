@@ -20,9 +20,9 @@ def register(request):
 
 def user_login(request):
     next = ""
-
     if request.GET:  
         next = request.GET['next']
+    print next
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']

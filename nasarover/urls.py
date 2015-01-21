@@ -8,6 +8,6 @@ urlpatterns = patterns('',
     url(r'^newgrid/', views.newgrid, name='newgrid'),
     url(r'^senform/', views.senform, name='senform'),
     url(r'^process/', views.process, name='process'),
-    url(r'^rover/$', login_required(views.RoverList.as_view())),
-    url(r'^rover/(?P<pk>[0-9]+)/$', login_required(views.RoverDetail.as_view())),
+    url(r'^rover/$', views.RoverList.as_view()),
+    url(r'^rover/(?P<pk>[0-9]+)/$', views.RoverDetail.as_view()),
 )
