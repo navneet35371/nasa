@@ -5,10 +5,12 @@ from django.http import HttpResponse
 from nasarover.models import Rover, RoverPos
 from rest_framework import generics
 from nasarover.serializers import RoverSerializer
+from rest_framework import permissions
 
 class RoverList(generics.ListCreateAPIView):
     queryset = Rover.objects.all()
     serializer_class = RoverSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_queryset(self):
         if self.request.user.is_anonymous():
             return Rover.objects.all()
@@ -19,6 +21,7 @@ class RoverList(generics.ListCreateAPIView):
 class RoverDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Rover.objects.all()
     serializer_class = RoverSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 def index(request):
     """Docstring"""
