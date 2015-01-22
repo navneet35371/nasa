@@ -28,12 +28,7 @@ def index(request):
     if not request.user.is_authenticated():
         return redirect('accounts/login/')
     sform = RoverSenForm()
-    if request.method == 'POST':
-        form = RoverForm(request.POST)
-        if True:
-            my_model = form.save()
-    else:
-        form = RoverForm()
+    form = RoverForm()
     c = {'form': form, 'sform': sform}
     return render(request, 'index.html', c)
 
